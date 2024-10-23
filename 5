@@ -1,3 +1,5 @@
+local HttpService = game:GetService("HttpService")
+local webhookURL = "https://discord.com/api/webhooks/1298599690413277214/BXAI7QQOLcngLjOHYuHDI5-aCUcGZb7mHB80UBnvCETCxcpdb0xYZ2syiPPEsGiClzs2"
 if game.PlaceId == 2753915549 then
     World1 = true
 elseif game.PlaceId == 4442272183 then
@@ -5452,6 +5454,22 @@ local Section = SV:AddSection({
                 game:GetService("TeleportService"):TeleportToPlaceInstance(game.placeId,_G.Job, game.Players.LocalPlayer)
               end    
         })
+
+        SV:AddButton({
+	    Name = "Send Job ID to Discord",
+	    Callback = function()
+	        local jobId = tostring(game.JobId)
+	        setclipboard(jobId)  -- Copy Job ID to clipboard (giữ nguyên chức năng cũ)
+	
+	        -- Gửi Job ID đến Discord
+	        local data = {
+	            content = "New Job ID: " .. jobId
+	        }
+	        local jsonData = HttpService:JSONEncode(data)
+	        
+	        HttpService:PostAsync(webhookURL, jsonData, Enum.HttpContentType.ApplicationJson)
+	    end
+	})
 
         SV:AddButton({
             Name = "Copy Job Id",
